@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant_check</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff6bd6, #00ddeb);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 3.5rem;
+            text-shadow: 3px 3px 5px rgba(255, 0, 191, 0.6);
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            animation: vibe 2s infinite;
+            font-weight: bold;
+        }
+
+        label {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 217, 235, 0.6);
+            margin-bottom: 1rem;
+        }
+
+        select {
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 220px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        select:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        #visaInfo {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            font-size: 1.4rem;
+            color: #ff00bf;
+            font-weight: bold;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        #visaInfo:hover {
+            opacity: 1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes vibe {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+    <script>
+        function checkVisa() {
+            const country = document.getElementById("country").value;
+            let message;
+
+            switch (country) {
+                case "USA":
+                    message = "Visa required for most applicants.";
+                    break;
+                case "Canada":
+                    message = "Visa required unless you have an eTA.";
+                    break;
+                case "India":
+                    message = "Visa required before travel.";
+                    break;
+                case "UK":
+                    message = "Visa depends on the duration of stay.";
+                    break;
+                case "Australia":
+                    message = "eVisa available for eligible travelers.";
+                    break;
+                default:
+                    message = "Please select a country.";
+            }
+
+            document.getElementById("visaInfo").innerText = message;
+        }
+    </script>
+</head>
+<body>
+    <h1>Visa Check</h1>
+    <label for="country">Select your country:</label>
+    <select id="country" onchange="checkVisa()">
+        <option value="">--Select a Country--</option>
+        <option value="USA">USA</option>
+        <option value="Canada">Canada</option>
+        <option value="India">India</option>
+        <option value="UK">UK</option>
+        <option value="Australia">Australia</option>
+    </select>
+    <p id="visaInfo">Please select a country.</p>
+</body>
+</html>
