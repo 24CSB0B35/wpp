@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visa Application System</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin: 1.5rem 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+        }
+
+        button[type="submit"] {
+            background: #3498db;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button[type="submit"]:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52,152,219,0.3);
+        }
+
+        /* Response Messages */
+        .alert {
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .error {
+            background: #ffeef0;
+            color: #ff4757;
+            border: 2px solid #ff4757;
+        }
+
+        .success {
+            background: #e8f7ee;
+            color: #2ed573;
+            border: 2px solid #2ed573;
+        }
+
+        .alert::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            background-size: cover;
+        }
+
+        .error::before {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff4757"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>');
+        }
+
+        .success::before {
+            background-image: url('data:image/sml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232ed573"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>');
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Online Visa Application</h2>
+        <form id="visaForm">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="fullName" required 
+                       placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label>Passport Number</label>
+                <input type="text" id="passport" 
+                       placeholder="Enter 8-10 character passport number"
+                       pattern=".{8,10}">
+            </div>
+            
+            <div class="form-group">
+                <label>Destination Country</label>
+                <select id="destination" required>
+                    <option value="">Select Destination</option>
+                    <option value="USA">United States</option>
+                    <option value="CAN">Canada</option>
+                    <option value="IND">India</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="AUS">Australia</option>
+                </select>
+            </div>
+            
+            <button type="submit">Submit Application</button>
+        </form>
+        <div id="systemResponse"></div>
+    </div>
+
+    <script>
+        document.getElementById('visaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const responseDiv = document.getElementById('systemResponse');
+            responseDiv.className = '';
+            
+            // Validate inputs
+            const name = document.getElementById('fullName').value.trim();
+            const passport = document.getElementById('passport').value;
+            const country = document.getElementById('destination').value;
+
+            if (!name || !passport || !country) {
+                showResponse('All fields are required!', 'error');
+                return;
+            }
+
+            if (passport.length < 8 || passport.length > 10) {
+                showResponse('Invalid passport number! Must be 8-10 characters', 'error');
+                return;
+            }
+
+            showResponse('✅ Visa application submitted successfully! Our team will contact you shortly.', 'success');
+        });
+
+        function showResponse(message, type) {
+            const responseDiv = document.getElementById('systemResponse');
+            responseDiv.innerHTML = message;
+            responseDiv.className = `alert ${type}`;
+        }
+    </script>
+</body>
+</html>
