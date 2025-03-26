@@ -1,44 +1,3 @@
-<?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "visa_system";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die(json_encode(["status" => "error", "message" => "Database connection failed: " . $conn->connect_error]));
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['fullName']);
-    $passport = trim($_POST['passport']);
-    $destination = trim($_POST['destination']);
-    
-    if (empty($name) || empty($passport) || empty($destination)) {
-        echo json_encode(["status" => "error", "message" => "All fields are required!"]);
-        exit;
-    }
-    
-    if (strlen($passport) < 8 || strlen($passport) > 10) {
-        echo json_encode(["status" => "error", "message" => "Invalid passport number! Must be 8-10 characters."]);
-        exit;
-    }
-    
-    $stmt = $conn->prepare("INSERT INTO visa_applications (full_name, passport_number, destination) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $name, $passport, $destination);
-    
-    if ($stmt->execute()) {
-        echo json_encode(["status" => "success", "message" => "✅ Visa application submitted successfully! Our team will contact you shortly."]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Application submission failed: " . $stmt->error]);
-    }
-    
-    $stmt->close();
-    $conn->close();
-    exit;
-}
-?>
 
 <!DOCTYPE html>
 <html>
@@ -187,3 +146,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </body>
 </html>
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "visa_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die(json_encode(["status" => "error", "message" => "Database connection failed: " . $conn->connect_error]));
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = trim($_POST['fullName']);
+    $passport = trim($_POST['passport']);
+    $destination = trim($_POST['destination']);
+    
+    if (empty($name) || empty($passport) || empty($destination)) {
+        echo json_encode(["status" => "error", "message" => "All fields are required!"]);
+        exit;
+    }
+    
+    if (strlen($passport) < 8 || strlen($passport) > 10) {
+        echo json_encode(["status" => "error", "message" => "Invalid passport number! Must be 8-10 characters."]);
+        exit;
+    }
+    
+    $stmt = $conn->prepare("INSERT INTO visa_applications (full_name, passport_number, destination) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $passport, $destination);
+    
+    if ($stmt->execute()) {
+        echo json_encode(["status" => "success", "message" => "✅ Visa application submitted successfully! Our team will contact you shortly."]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Application submission failed: " . $stmt->error]);
+    }
+    
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+?>
+
